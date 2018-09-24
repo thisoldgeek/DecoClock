@@ -1,5 +1,5 @@
 # **Art Deco Clock and Weather**
-![Art Deco Clock](https://github.com/thisoldgeek/miniz/blob/master/miniz_hackster_intro_photo.JPG "Art Deco Clock")
+![Art Deco Clock](https://github.com/thisoldgeek/DecoClock/blob/master/Deco_Clock_for_READme.jpg "Art Deco Clock and Weather Display")
  
 ## *Description:*
 A 3D printed case in the sytle of Gilbert Rohde Model 6356 for Herman Miller.
