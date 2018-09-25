@@ -1,0 +1,17 @@
+# copy to /etc/systemd/system/decoclock.service with sudo
+# chmod 644 /etc/systemd/system/decoclock.service with sudo
+# sudo systemctl enable decoclock
+
+[Unit]
+Description=Art Deco Clock
+DefaultDependencies=no  #overrides default late start in boot process
+After=local-fs.target
+
+[Service]
+ExecStart=/home/pi/DecoClock/deco_clock_weather.py
+
+[Install]
+WantedBy=sysinit.target
+
+
+
