@@ -82,7 +82,7 @@ CAMERA = pi3d.Camera(is_3d=False)
 if clock_style == 1:
 	clock_face = pi3d.ImageSprite("textures/clock1_face.png",  shader,  w=320.0,  h=320.0,  x=12.0, y=-5.0, z=6.0)
 	clock_hour = pi3d.ImageSprite("textures/clock1_hour_hand.png", shader,  w=128.0,  h=176.0,  x=12.0, y=-5.0, z=4.0)
-	clock_min  = pi3d.ImageSprite("textures/clock1_minute_hand.png", shader,  w=16.0,  h=156.0,  x=12.0, y=-5.0, z=4.0)
+	clock_min  = pi3d.ImageSprite("textures/clock1_minute_hand.png", shader,  w=16.0,  h=240.0,  x=12.0, y=-5.0, z=4.0)
 	clock_sec  = pi3d.ImageSprite("textures/clock1_second_hand.png", shader,  w=16.0, h=164.0, x=12.0, y=-5.0, z=3.0)
 	clock_center  = pi3d.ImageSprite("textures/clock1_center.png", shader,  w=16.0,  h=16.0,  x=12.0, y=-5.0, z=2.0)
 elif clock_style == 2: 
