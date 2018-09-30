@@ -19,7 +19,7 @@ time24 = False				# If True, uses 24 hour clock, else 12 hour clock
 clock_style = 2				# clock_style: 1 = white, 2 = green
 wi_style = 2				# wi_style (weather icon style); 1 = plain/flat, 2 = art deco style
 screen_num = 1				# 1 = Clock, 2 = Weather
-rotate_display = True			# False: Show one screen only, either clock or weather based on screen_num; True: rotate screens every display_interval
+rotate_display = False			# False: Show one screen only, either clock or weather based on screen_num; True: rotate screens every display_interval
 display_interval = 30			# Switch between clock and weather every 'n' seconds
 
 weather_API = False			# weather_API = False, use feedparser; True, use wunderground API with API key
