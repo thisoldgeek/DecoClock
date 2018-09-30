@@ -26,7 +26,7 @@ hackster.io/thisoldgeek Art Deco Clock
  Install python programs and run scripts. See tutorial at hackster.io/thisoldgeek
  The following are the program variable defaults; change to your preference
 
- # user modifiable variables follow; default values for startup are already set
+  user modifiable variables follow; default values for startup are already set
 * time24 = False  			#If True, uses 24 hour clock, else 12 hour clock
 * clock_style = 2			# clock_style: 1 = white, 2 = green
 * wi_style = 2				# wi_style (weather icon style); 1 = plain/flat, 2 = art deco style
@@ -37,7 +37,7 @@ hackster.io/thisoldgeek Art Deco Clock
 * weather_API = False			# weather_API = False, use feedparser; True, use wunderground API with API key
 * centigrade = False			# centigrade = True, use degrees C; False, use degrees Fahrenheit
 
- # user modifiable backlight variables; default values for startup are already set
+ user modifiable backlight variables; default values for startup are already set
 * dim_backlight = True			# If True, Turn STMPE control off, use GPIO 18 to dim screen; False = Full Brightness with STMPE
 * dim_start = 21			# Backlight starts dim mode at this hour, using 24hr style
 * dim_end = 7				# Backlight ends dim mode at this hour
