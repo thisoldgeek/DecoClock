@@ -58,7 +58,7 @@ hackster.io/thisoldgeek Art Deco Clock
 * Default display_interval = 30; time in seconds before screen transitions to clock or weather if display_rotate = True
 
 ## * Dimmer Settings *
-* Default - screen is dim between hours of 8PM/21:00 and 7:00AM
+* Default - screen is dim between hours of 9PM/21:00 and 7:00AM
 
 
 ## *REQUIRED:*
