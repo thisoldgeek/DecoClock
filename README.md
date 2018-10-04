@@ -65,6 +65,6 @@ hackster.io/thisoldgeek Art Deco Clock
 Intentionally blank
 
 ## *More Information:*
-See the build log at https://www.hackster.io/thisoldgeek/Art Deco Clock
-## *Update September 2018:*
+See the build log at https://bit.ly/2IAYcJQ
+## *Update October 03 2018:*
 Initial install.
