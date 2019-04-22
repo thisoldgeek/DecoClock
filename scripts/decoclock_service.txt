@@ -8,6 +8,7 @@ DefaultDependencies=no  #overrides default late start in boot process
 After=local-fs.target
 
 [Service]
+User=pi
 ExecStart=/home/pi/DecoClock/deco_clock_weather.py
 Restart=on-failure
 RestartSec=15s

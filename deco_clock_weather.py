@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-import feedparser
+import forecastio
 import pi3d
 import time
 import datetime
 import os
-import urllib.request  as request 
-import json
+# import urllib.request  as request 
+# import json
 from PIL import Image, ImageDraw
 from time import sleep
 
@@ -16,13 +16,13 @@ display_start_time =time.time()		# Keep track of how long screen is displayed, f
 
 # user modifiable variables follow; default values for startup are already set
 time24 = False				# If True, uses 24 hour clock, else 12 hour clock
-clock_style = 2				# clock_style: 1 = white, 2 = green
+clock_style = 1				# clock_style: 1 = white, 2 = green
 wi_style = 2				# wi_style (weather icon style); 1 = plain/flat, 2 = art deco style
 screen_num = 1				# 1 = Clock, 2 = Weather
-rotate_display = False			# False: Show one screen only, either clock or weather based on screen_num; True: rotate screens every display_interval
+rotate_display = True			# False: Show one screen only, either clock or weather based on screen_num; True: rotate screens every display_interval
 display_interval = 30			# Switch between clock and weather every 'n' seconds
 
-weather_API = False			# weather_API = False, use feedparser; True, use wunderground API with API key
+
 centigrade = False			# centigrade = True, use degrees C; False, use degrees Fahrenheit
 
 # user modifiable backlight variables; default values for startup are already set
@@ -37,39 +37,11 @@ dim_state = False			# Program toggles to indicate if screen iS dim (= True) or n
 STMPE = 1				# STMPE is ON; DO NOT MANUALLY CHANGE THIS! Set in code
 
 # API Weather Variables - change for your Key and location
-myKey = '***************'	# wunderground API Key - see wunderground developer's site to get yours
-Location = 'CA/94523'		# your location US State/zip code
-#Location = 'Australia/Sydney'	# English name for country/city
-#Location = 'Germany/Munich'
-
-
-# Feedparser Weather variables foloow
-
-#
-# For world-wide locations, condisder using the wunderground 4 letter ICAO airport code
-# available at https://www.wunderground.com/about/faq/international_cities.asp
-# This will return both Fahrenheit and Centigrade and should not break this script!
-#
-
-# LOCATION is a user modifiable variable you must set to display weather for your location
-
-LOCATION =  "CA/Pleasant_Hill"  	# US Format: State/City
-#LOCATION =  "WA/Seattle"
-#LOCATION =  "NY/New_York"
-#LOCATION =   "IL/Chicago"
-#LOCATION =  "global/DE/Munich"		# Germany
-#LOCATION =  "global/FR/Paris"		# France
-#LOCATION  = "global/BR/Copacabana"     # Brazil
-#LOCATION  = "global/NO/Oslo"		# Norway
-#LOCATION  = "global/UK/London"		# United Kingdom
-#LOCATION  =  "global/cn/ZBAA"		# Beijing Airport
-#LOCATION  = "global/stations/cn/shenzhen/IGUANDON2"		# China: returned data in different format, no Centigrade
-#LOCATION  = "global/ZA/Johannesburg"	# South Africa
-#LOCATION  = "global/AU/Sydney"		# Australia
-#LOCATION  = "global/NZ/Wellington"	# New Zealand
-#LOCATION  = "global/mx/MMMX"           # Mexico City Airport
-#LOCATION  = "global/mx/Monterrey"       			# Mexico: returned data in different format, no Centigrade
-
+api_key = "*****************************" # Dark Sky API Key - Go to https://darksky.net/dev/ and sign up for a free API key
+# Use http://www.latlong.net to get the following lat/lng values (required for API)
+lat = 37.961461
+lng = -122.087975
+forecast = forecastio.load_forecast(api_key, lat, lng)
 
 #pi3d Setup
 DISPLAY = pi3d.Display.create(use_pygame=True, samples=4)
@@ -130,17 +102,18 @@ myFont = pi3d.Font("/home/pi/DecoClock/fonts/DubbaDubbaNF.ttf", gold, font_size 
 #wi_font = pi3d.Font("/home/pi/DecoClock/fonts/weathericons-regular-webfont.ttf", gold, font_size = 100)   #load ttf font and set the font color to gold
 
 
-#Variables
-#weather_check_time = 900 # Check the feed every 15 minutes if using weather underground free API- you only get 500 calls/day on free developer account
-weather_check_time = 30 # Check the feed every 30 seconds if using weather underground feed parser; change to as little as 10 seconds
+# Variables
+weather_check_time = 900 # Check the feed every 15 minutes; Dark Sky API allows 1000 calls per day on free account
 weather_start_time = time.time() - weather_check_time	# forces a weather api call on start-up
 curr_cond = "clear"
 
 
 def get_curr_conds():	# Optional Current Weather Conditions Display
-	global feed
 	global weather_start_time
 	global weather_check_time
+	global api_key
+	global lat
+	global lng
 	global conds
 	global temp_f
 	global temp_c
@@ -149,48 +122,10 @@ def get_curr_conds():	# Optional Current Weather Conditions Display
 	
 	if time.time() - weather_start_time > weather_check_time:	# check the number of seconds in weather_check_time has passed
 		weather_start_time = time.time()
-		if weather_API:
-			wuRequest = "http://api.wunderground.com/api/"+ myKey +"/geolookup/conditions/q/" + Location  + ".json"
-			f = request.urlopen(wuRequest)
-			json_string = f.read().decode('utf-8')
-			parsed_json = json.loads(json_string)
-			location = parsed_json['location']['city']
-			conds =  parsed_json['current_observation']['weather']
-			conds = conds.strip()  # get rid of spaces at beginning and end but not middle of string for dict (cond_face) lookup
-			temp_c = parsed_json['current_observation']['temp_c']	# Use the appropriate units for your location, see below
-			temp_f = parsed_json['current_observation']['temp_f']	
-		elif weather_API is False:	
-			d = feedparser.parse('http://rss.wunderground.com/auto/rss_full/'+LOCATION)
-			# bozo is built-in feedparser flag for malformed feed
-			if d.bozo: print(d.bozo_exception)  #trap error and print it out
-			#d = feedparser.parse('http://rss.wunderground.com/auto/rss_full/CA/Pleasant_Hill')
-			try:
-				line =  str(d.entries[0].summary)
-			except IndexError:
-				print(time.strftime("%H:%M:%S", time.localtime()))," IndexError "
-
-			# Format temp and conds	
-			line = line.replace(":","|")
-			#print line
-			a = line.split("|")
-			# print a
-			mytemp = str(a[1])
-			mytemp = mytemp.replace("&#176;", " ")
-			mytemp = mytemp.replace("&deg;", " ")
-			mytemp = mytemp.split("/")
-		
-			#b = a[11].split("/")
-
-			# strip spaces at beginning and end but not in the middle
-			temp_f = mytemp[0]
-			temp_f = temp_f.strip()
-
-			temp_c = mytemp[1]
-			temp_c = temp_c.strip()
-		
-			#cond.strip REQUIRED for proper lookup in cond_face dict
-			conds = a[7]
-			conds = conds.strip()
+		forecast = forecastio.load_forecast(api_key, lat, lng)
+		current = forecast.currently()
+		conds = current.summary
+		temp_f = round(current.temperature)
 	else:	
 		pass
 	
@@ -281,9 +216,9 @@ def get_curr_conds():	# Optional Current Weather Conditions Display
 		myTime = time.strftime("%-I:%M %p")
 
 	if centigrade:	
-		timetempStr = myTime +"  "+ str(temp_c)	# centigrade = True
+		timetempStr = myTime +"  "+ str(temp_c) + " C"	# centigrade = True
 	elif centigrade is False: 
-		timetempStr = myTime +"  "+ str(temp_f)	
+		timetempStr = myTime +"  "+ str(temp_f)	+ " F"
 	
 
 	dispTemp = pi3d.String(camera=CAMERA, is_3d=False, font=myFont, string=timetempStr,  x=12, y=-30, z=1.0)
