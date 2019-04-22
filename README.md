@@ -71,4 +71,3 @@ Initial install.
 ## *Update April 22 2019*
 Wunderground no longer supports its API feed. Clock will still work. 
 To receive weather use the Dark Sky API, which requires signing up for an account and key.
-The script to use is: DS_deco_clock_weather.py
